@@ -1,0 +1,33 @@
+Completion:
+  ArgumentLists: None
+
+Diagnostics:
+  ClangTidy:
+    FastCheckFilter: Loose
+
+Hover:
+  ShowAKA: true
+
+InlayHints:
+  BlockEnd: true
+
+CompileFlags:
+  Add:
+    - -std=c99
+    - -Wall
+    - -Wextra
+    - -Werror
+    - -Wpedantic
+    - -I/usr/include/lua5.1
+
+---
+If:
+  PathMatch: .*\.c
+CompileFlags:
+  Add: -xc
+
+---
+If:
+  PathMatch: .*\.h
+CompileFlags:
+  Add: -xc-header
