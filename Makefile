@@ -22,4 +22,8 @@ $(LUA_MOD): $(addprefix $(BUILD_DIR)/,cielo.o cielo_lua.o)
 clean:
 	$(RM) -r $(BUILD_DIR)
 
-.PHONY: all clean
+# TODO: this is for quick testing, and eventually should be removed
+test:
+	$(CC) -std=c99 -g -o $(BUILD_DIR)/cielo_test $(addprefix src/,cielo_test.c cielo.c) -lm
+
+.PHONY: all clean test
