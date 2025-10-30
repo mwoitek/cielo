@@ -1,11 +1,12 @@
 #include "cielo.h"
+#include <ctype.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
-const size_t RGB_HEX_LENGTH = 6; // no # at the start
+const size_t RGB_HEX_LENGTH = 7;
 
 float cube(float x) { return powf(x, 3.0F); }
 
@@ -16,32 +17,46 @@ typedef struct {
 	double b;
 } Rgb;
 
+bool rgb_validate_hex(const char *hex)
+{
+	if (!hex || !memchr(hex, '\0', RGB_HEX_LENGTH + 1) ||
+	    strlen(hex) < RGB_HEX_LENGTH) {
+		return false;
+	}
+
+	if (hex[0] != '#') {
+		return false;
+	}
+	for (size_t i = 1; i < RGB_HEX_LENGTH; i++) {
+		if (!isxdigit(hex[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 Rgb rgb_from_hex(const char *hex, bool *ok)
 {
 	Rgb rgb = {0.0, 0.0, 0.0};
 
-	if (!hex || !memchr(hex, '\0', RGB_HEX_LENGTH + 1) ||
-	    strlen(hex) < RGB_HEX_LENGTH) {
+	if (!rgb_validate_hex(hex)) {
 		*ok = false;
 		return rgb;
 	}
 
-	unsigned long chans[3] = {0, 0, 0};
 	char *hex_slice = "00";
-	char *str_end;
+	unsigned long chans[3] = {0, 0, 0};
 
-	for (unsigned short i = 0; i < 3; i++) {
-		memcpy(hex_slice, hex + i + i, 2);
-		chans[i] = strtoul(hex_slice, &str_end, 16);
-		if (*str_end != '\0') {
-			*ok = false;
-			return rgb;
-		}
+	for (size_t i = 0; i < 3; i++) {
+		memcpy(hex_slice, hex + 2 * i + 1, 2);
+		chans[i] = strtoul(hex_slice, NULL, 16);
 	}
 
 	rgb.r = (double)chans[0] / 255.0;
 	rgb.g = (double)chans[1] / 255.0;
 	rgb.b = (double)chans[2] / 255.0;
 
+	*ok = true;
 	return rgb;
 }
