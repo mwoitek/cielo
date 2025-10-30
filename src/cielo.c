@@ -8,14 +8,8 @@
 
 const size_t RGB_HEX_LENGTH = 7;
 
+// TODO: remove
 float cube(float x) { return powf(x, 3.0F); }
-
-// NOTE: Normalized channel values will be used
-typedef struct {
-	double r;
-	double g;
-	double b;
-} Rgb;
 
 bool rgb_validate_hex(const char *hex)
 {
