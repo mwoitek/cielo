@@ -8,6 +8,7 @@ Checks: >
   -concurrency-*,
   -cppcoreguidelines-*,
   -google-objc-*,
+  -google-readability-todo,
   -hicpp-*,
   -llvmlibc-*,
   -modernize-*,
@@ -15,6 +16,7 @@ Checks: >
   -openmp-*,
   -readability-identifier-length,
   -readability-magic-numbers,
+  -readability-math-missing-parentheses,
 WarningsAsErrors: "*"
 FormatStyle: file
 HeaderFilterRegex: ".*"
