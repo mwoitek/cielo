@@ -13,14 +13,11 @@ float cube(float x) { return powf(x, 3.0F); }
 
 bool rgb_validate_hex(const char *hex)
 {
-	if (!hex || !memchr(hex, '\0', RGB_HEX_LENGTH + 1) ||
+	if (!hex || *hex != '#' || !memchr(hex, '\0', RGB_HEX_LENGTH + 1) ||
 	    strlen(hex) < RGB_HEX_LENGTH) {
 		return false;
 	}
 
-	if (hex[0] != '#') {
-		return false;
-	}
 	for (size_t i = 1; i < RGB_HEX_LENGTH; i++) {
 		if (!isxdigit(hex[i])) {
 			return false;
