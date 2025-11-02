@@ -36,7 +36,7 @@ Rgb rgb_from_hex(const char *hex, bool *ok)
 		return rgb;
 	}
 
-	char *hex_slice = "00";
+	char hex_slice[3] = "00";
 	unsigned long chans[3] = {0, 0, 0};
 
 	for (size_t i = 0; i < 3; i++) {
