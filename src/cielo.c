@@ -51,3 +51,19 @@ Rgb rgb_from_hex(const char *hex, bool *ok)
 	*ok = true;
 	return rgb;
 }
+
+double rgb_gamma(double x)
+{
+	if (x > 0.0031308) {
+		return 1.055 * pow(x, 1.0 / 2.4) - 0.055;
+	}
+	return x * 12.92;
+}
+
+double rgb_gamma_inv(double x)
+{
+	if (x > 0.04045) {
+		return pow((x + 0.055) / 1.055, 2.4);
+	}
+	return x / 12.92;
+}
