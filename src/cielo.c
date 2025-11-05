@@ -9,7 +9,10 @@
 const size_t RGB_HEX_LENGTH = 7;
 
 // TODO: remove
-float cube(float x) { return powf(x, 3.0F); }
+float cube(float x)
+{
+	return powf(x, 3.0F);
+}
 
 bool rgb_validate_hex(const char *hex)
 {
@@ -19,9 +22,7 @@ bool rgb_validate_hex(const char *hex)
 	}
 
 	for (size_t i = 1; i < RGB_HEX_LENGTH; i++) {
-		if (!isxdigit(hex[i])) {
-			return false;
-		}
+		if (!isxdigit(hex[i])) return false;
 	}
 
 	return true;
@@ -54,16 +55,10 @@ Rgb rgb_from_hex(const char *hex, bool *ok)
 
 double rgb_gamma(double x)
 {
-	if (x > 0.0031308) {
-		return 1.055 * pow(x, 1.0 / 2.4) - 0.055;
-	}
-	return x * 12.92;
+	return x > 0.0031308 ? 1.055 * pow(x, 1.0 / 2.4) - 0.055 : x * 12.92;
 }
 
 double rgb_gamma_inv(double x)
 {
-	if (x > 0.04045) {
-		return pow((x + 0.055) / 1.055, 2.4);
-	}
-	return x / 12.92;
+	return x > 0.04045 ? pow((x + 0.055) / 1.055, 2.4) : x / 12.92;
 }
