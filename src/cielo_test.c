@@ -54,6 +54,23 @@ int main(void)
 	printf("C[2][0] = %.5f\n", C[2][0]);
 	// }}}
 
+	// matrix_multiply_vector {{{
+	const Matrix3 M = {{0.228, 0.888, 0.85},
+			   {0.259, 0.154, 0.183},
+			   {0.982, 0.075, 0.214}};
+	const Vector3 v = {0.719, 0.048, 0.944};
+
+	Vector3 u;
+	matrix_multiply_vector(u, M, v); // u = M * v
+
+	// Expected result:
+	// u = {1.008956, 0.366365, 0.911674}
+
+	for (int i = 0; i < MATRIX_DIM; i++) {
+		printf("u[%d] = %.6f\n", i, u[i]);
+	}
+	// }}}
+
 	return 0;
 }
 
