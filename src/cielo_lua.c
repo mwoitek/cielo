@@ -2,17 +2,37 @@
 #include <lauxlib.h>
 #include <lua.h>
 
-// Lua binding for cube()
-static int l_cube(lua_State *L)
+// NOTE: this is not meant to be the final version of this function
+static int l_rgb_from_hex(lua_State *L)
 {
-	float x = (float)luaL_checknumber(L, 1);
-	lua_pushnumber(L, cube(x));
+	const char *hex = luaL_checkstring(L, 1);
+
+	bool ok = false;
+	const Rgb rgb = rgb_from_hex(hex, &ok);
+	if (!ok) return luaL_error(L, "invalid hex code: %s", hex);
+
+	lua_createtable(L, 0, 3);
+
+	lua_pushstring(L, "r");
+	lua_pushnumber(L, rgb.r);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "g");
+	lua_pushnumber(L, rgb.g);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "b");
+	lua_pushnumber(L, rgb.b);
+	lua_rawset(L, -3);
+
 	return 1;
 }
 
+static const luaL_Reg funcs[] = {{"rgb_from_hex", l_rgb_from_hex},
+				 {NULL, NULL}};
+
 int luaopen_cielo(lua_State *L)
 {
-	static const luaL_Reg funcs[] = {{"cube", l_cube}, {NULL, NULL}};
 	luaL_register(L, "cielo", funcs);
 	return 1;
 }
