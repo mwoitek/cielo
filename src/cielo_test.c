@@ -71,6 +71,25 @@ int main(void)
 	}
 	// }}}
 
+	// rgb_to_xyz {{{
+	const Rgb blue_rgb = {.r = 0.0, .g = 0.0, .b = 1.0};
+	const Xyz blue_xyz = rgb_to_xyz(&blue_rgb);
+
+	printf("Blue: X = %.6f\n", blue_xyz.x); // 0.180438
+	printf("Blue: Y = %.6f\n", blue_xyz.y); // 0.072175
+	printf("Blue: Z = %.6f\n", blue_xyz.z); // 0.950304
+	// }}}
+
+	// xyz_to_rgb {{{
+	// D65 illuminant -> should be white
+	const Xyz d65_xyz = {.x = 0.95047, .y = 1.00000, .z = 1.08883};
+	const Rgb d65_rgb = xyz_to_rgb(&d65_xyz);
+
+	printf("D65: Red   = %.5f\n", d65_rgb.r);
+	printf("D65: Green = %.5f\n", d65_rgb.g);
+	printf("D65: Blue  = %.5f\n", d65_rgb.b);
+	// }}}
+
 	return 0;
 }
 
