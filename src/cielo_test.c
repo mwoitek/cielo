@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 int main(void)
 {
@@ -31,6 +32,16 @@ int main(void)
 	printf("Plum: Green -> %.4f\n", plum.g); // 0.6275
 	printf("Plum: Blue  -> %.4f\n", plum.b); // 0.8667
 
+	// }}}
+
+	// rgb_to_hex {{{
+	const Rgb orange = {.r = 1.0, .g = 165.0 / 255.0, .b = 0.0};
+
+	char orange_hex[8];
+	rgb_to_hex(&orange, orange_hex);
+
+	assert(strcmp(orange_hex, "#ffa500") == 0);
+	printf("Orange Hex: %s\n", orange_hex);
 	// }}}
 
 	// matrix_multiply {{{
