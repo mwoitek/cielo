@@ -1,7 +1,9 @@
-#ifndef _CIELO_H_
-#define _CIELO_H_
+#ifndef __CIELO_H__
+#define __CIELO_H__
 
 #include <stdbool.h>
+
+#define RGB_HEX_LENGTH 7
 
 // TODO: remove
 float cube(float x);
@@ -28,4 +30,4 @@ double rgb_clamp(double x);
 Xyz rgb_to_xyz(const Rgb *rgb);
 Rgb xyz_to_rgb(const Xyz *xyz);
 
-#endif // _CIELO_H_
+#endif

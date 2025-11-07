@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-const size_t RGB_HEX_LENGTH = 7;
-
 const Matrix3 RGB_TO_XYZ = {{0.4124564, 0.3575761, 0.1804375},
 			    {0.2126729, 0.7151522, 0.0721750},
 			    {0.0193339, 0.1191920, 0.9503041}};
@@ -30,7 +28,9 @@ bool rgb_validate_hex(const char *hex)
 	}
 
 	for (size_t i = 1; i < RGB_HEX_LENGTH; i++) {
-		if (!isxdigit(hex[i])) return false;
+		if (!isxdigit(hex[i])) {
+			return false;
+		}
 	}
 
 	return true;
@@ -38,7 +38,7 @@ bool rgb_validate_hex(const char *hex)
 
 Rgb rgb_from_hex(const char *hex, bool *ok)
 {
-	Rgb rgb = {0.0, 0.0, 0.0};
+	Rgb rgb = {.r = -1.0, .g = -1.0, .b = -1.0};
 
 	if (!rgb_validate_hex(hex)) {
 		*ok = false;
@@ -61,14 +61,14 @@ Rgb rgb_from_hex(const char *hex, bool *ok)
 	return rgb;
 }
 
-double rgb_gamma(double x)
-{
-	return x > 0.0031308 ? 1.055 * pow(x, 1.0 / 2.4) - 0.055 : x * 12.92;
-}
-
 double rgb_gamma_inverse(double x)
 {
 	return x > 0.04045 ? pow((x + 0.055) / 1.055, 2.4) : x / 12.92;
+}
+
+double rgb_gamma(double x)
+{
+	return x > 0.0031308 ? 1.055 * pow(x, 1.0 / 2.4) - 0.055 : x * 12.92;
 }
 
 double rgb_clamp(double x)
@@ -78,15 +78,14 @@ double rgb_clamp(double x)
 
 Xyz rgb_to_xyz(const Rgb *rgb)
 {
-	const Vector3 linear_rgb = {rgb_gamma_inverse(rgb->r),
-				    rgb_gamma_inverse(rgb->g),
-				    rgb_gamma_inverse(rgb->b)};
+	const Vector3 rgb_vec = {rgb_gamma_inverse(rgb->r),
+				 rgb_gamma_inverse(rgb->g),
+				 rgb_gamma_inverse(rgb->b)};
 
 	Vector3 xyz_vec;
-	matrix_multiply_vector(xyz_vec, RGB_TO_XYZ, linear_rgb);
+	matrix_multiply_vector(xyz_vec, RGB_TO_XYZ, rgb_vec);
 
-	Xyz xyz = {.x = xyz_vec[0], .y = xyz_vec[1], .z = xyz_vec[2]};
-	return xyz;
+	return (Xyz){.x = xyz_vec[0], .y = xyz_vec[1], .z = xyz_vec[2]};
 }
 
 Rgb xyz_to_rgb(const Xyz *xyz)
@@ -100,6 +99,5 @@ Rgb xyz_to_rgb(const Xyz *xyz)
 		rgb_vec[i] = rgb_clamp(rgb_gamma(rgb_vec[i]));
 	}
 
-	Rgb rgb = {.r = rgb_vec[0], .g = rgb_vec[1], .b = rgb_vec[2]};
-	return rgb;
+	return (Rgb){.r = rgb_vec[0], .g = rgb_vec[1], .b = rgb_vec[2]};
 }
