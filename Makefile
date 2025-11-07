@@ -10,13 +10,13 @@ all: $(LUA_MOD)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-$(BUILD_DIR)/cielo.o: $(addprefix src/,cielo.c cielo.h) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
-
 $(BUILD_DIR)/cielo_lua.o: src/cielo_lua.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(LUA_INC) -c $< -o $@
 
-$(LUA_MOD): $(addprefix $(BUILD_DIR)/,cielo.o cielo_lua.o)
+$(BUILD_DIR)/%.o: src/%.c src/%.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LUA_MOD): $(BUILD_DIR)/*.o
 	$(CC) -shared $^ -o $@ -lm
 
 clean:
