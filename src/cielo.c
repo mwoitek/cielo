@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -59,6 +60,13 @@ Rgb rgb_from_hex(const char *hex, bool *ok)
 
 	*ok = true;
 	return rgb;
+}
+
+void rgb_to_hex(const Rgb *rgb, char out[RGB_HEX_LENGTH + 1])
+{
+	(void)snprintf(out, RGB_HEX_LENGTH + 1, "#%02lx%02lx%02lx",
+		       lround(rgb->r * 255.0), lround(rgb->g * 255.0),
+		       lround(rgb->b * 255.0));
 }
 
 double rgb_gamma_inverse(double x)

@@ -22,6 +22,7 @@ typedef struct {
 
 bool rgb_validate_hex(const char *hex);
 Rgb rgb_from_hex(const char *hex, bool *ok);
+void rgb_to_hex(const Rgb *rgb, char out[RGB_HEX_LENGTH + 1]);
 
 double rgb_gamma_inverse(double x);
 double rgb_gamma(double x);
