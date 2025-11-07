@@ -5,6 +5,7 @@ Checks: >
   -altera-*,
   -android-*,
   -boost-*,
+  -bugprone-easily-swappable-parameters,
   -concurrency-*,
   -cppcoreguidelines-*,
   -google-objc-*,
