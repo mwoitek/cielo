@@ -5,9 +5,6 @@
 
 #define RGB_HEX_LENGTH 7
 
-// TODO: remove
-float cube(float x);
-
 typedef struct {
 	double r;
 	double g;

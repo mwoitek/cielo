@@ -15,12 +15,6 @@ const Matrix3 XYZ_TO_RGB = {{3.2404542, -1.5371385, -0.4985314},
 			    {-0.9692660, 1.8760108, 0.0415560},
 			    {0.0556434, -0.2040259, 1.0572252}};
 
-// TODO: remove
-float cube(float x)
-{
-	return powf(x, 3.0F);
-}
-
 bool rgb_validate_hex(const char *hex)
 {
 	if (!hex || *hex != '#' || !memchr(hex, '\0', RGB_HEX_LENGTH + 1) ||
