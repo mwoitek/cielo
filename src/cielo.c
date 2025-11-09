@@ -2,7 +2,6 @@
 
 #include <ctype.h>
 #include <math.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +19,9 @@ const Matrix3 XYZ_TO_RGB = {
     {-0.9692660,  1.8760108,  0.0415560},
     { 0.0556434, -0.2040259,  1.0572252}
 };
+
+const double LAB_EPSILON = 216.0 / 24389.0;
+const double LAB_KAPPA = 24389.0 / 27.0;
 
 bool rgb_validate_hex(const char* hex)
 {
@@ -113,4 +115,14 @@ Rgb xyz_to_rgb(const Xyz* xyz)
   }
 
   return (Rgb){.r = rgb_vec[0], .g = rgb_vec[1], .b = rgb_vec[2]};
+}
+
+double lab_transfer(double x)
+{
+  return x > LAB_EPSILON ? cbrt(x) : (LAB_KAPPA * x + 16.0) / 116.0;
+}
+
+double lab_transfer_inverse(double x)
+{
+  return x > cbrt(LAB_EPSILON) ? x * x * x : (116.0 * x - 16.0) / LAB_KAPPA;
 }

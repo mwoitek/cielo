@@ -28,4 +28,7 @@ double rgb_clamp(double x);
 Xyz rgb_to_xyz(const Rgb* rgb);
 Rgb xyz_to_rgb(const Xyz* xyz);
 
+double lab_transfer(double x);
+double lab_transfer_inverse(double x);
+
 #endif
