@@ -17,6 +17,12 @@ typedef struct {
   double z;
 } Xyz;
 
+typedef struct {
+  double l;
+  double a;
+  double b;
+} Lab;
+
 bool rgb_validate_hex(const char* hex);
 Rgb rgb_from_hex(const char* hex, bool* ok);
 void rgb_to_hex(const Rgb* rgb, char out[RGB_HEX_LENGTH + 1]);
@@ -30,5 +36,8 @@ Rgb xyz_to_rgb(const Xyz* xyz);
 
 double lab_transfer(double x);
 double lab_transfer_inverse(double x);
+
+Lab xyz_to_lab(const Xyz* xyz);
+Xyz lab_to_xyz(const Lab* lab);
 
 #endif

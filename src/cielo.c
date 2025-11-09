@@ -20,6 +20,8 @@ const Matrix3 XYZ_TO_RGB = {
     { 0.0556434, -0.2040259,  1.0572252}
 };
 
+const Xyz D65_ILLUMINANT = {.x = 0.95047, .y = 1.00000, .z = 1.08883};
+
 const double LAB_EPSILON = 216.0 / 24389.0;
 const double LAB_KAPPA = 24389.0 / 27.0;
 
@@ -125,4 +127,39 @@ double lab_transfer(double x)
 double lab_transfer_inverse(double x)
 {
   return x > cbrt(LAB_EPSILON) ? x * x * x : (116.0 * x - 16.0) / LAB_KAPPA;
+}
+
+Lab xyz_to_lab(const Xyz* xyz)
+{
+  double normalized[3] = {xyz->x / D65_ILLUMINANT.x,
+                          xyz->y / D65_ILLUMINANT.y,
+                          xyz->z / D65_ILLUMINANT.z};
+
+  double transfer_vals[3];
+  for (size_t i = 0; i < 3; i++) {
+    transfer_vals[i] = lab_transfer(normalized[i]);
+  }
+
+  return (Lab){
+      .l = 116.0 * transfer_vals[1] - 16.0,
+      .a = 500.0 * (transfer_vals[0] - transfer_vals[1]),
+      .b = 200.0 * (transfer_vals[1] - transfer_vals[2]),
+  };
+}
+
+Xyz lab_to_xyz(const Lab* lab)
+{
+  double inv_args[3];
+  inv_args[1] = (lab->l + 16.0) / 116.0;
+  inv_args[0] = inv_args[1] + lab->a / 500.0;
+  inv_args[2] = inv_args[1] - lab->b / 200.0;
+
+  double inv_vals[3];
+  for (size_t i = 0; i < 3; i++) {
+    inv_vals[i] = lab_transfer_inverse(inv_args[i]);
+  }
+
+  return (Xyz){.x = D65_ILLUMINANT.x * inv_vals[0],
+               .y = D65_ILLUMINANT.y * inv_vals[1],
+               .z = D65_ILLUMINANT.z * inv_vals[2]};
 }
