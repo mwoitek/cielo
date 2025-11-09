@@ -109,6 +109,30 @@ int main(void)
   printf("D65: Blue  = %.5f\n", d65_rgb.b);
   // }}}
 
+  // xyz_to_lab {{{
+  const Rgb gold_rgb = rgb_from_hex("#ffd700", &ok);
+  assert(ok);
+
+  const Xyz gold_xyz = rgb_to_xyz(&gold_rgb);
+  const Lab gold_lab = xyz_to_lab(&gold_xyz);
+
+  printf("Gold: L* = %.4f\n", gold_lab.l);  // 86.9306
+  printf("Gold: a* = %.4f\n", gold_lab.a);  // -1.9237
+  printf("Gold: b* = %.4f\n", gold_lab.b);  // 87.1320
+  // }}}
+
+  // lab_to_xyz {{{
+  const Lab mint_lab = {.l = 66.1132, .a = -43.1697, .b = 12.4443};
+  const Xyz mint_xyz = lab_to_xyz(&mint_lab);
+
+  const Rgb mint_rgb = xyz_to_rgb(&mint_xyz);
+
+  char mint_hex[8];
+  rgb_to_hex(&mint_rgb, mint_hex);
+
+  printf("Mint Hex: %s\n", mint_hex);  // #3eb489
+  // }}}
+
   return 0;
 }
 
