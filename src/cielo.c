@@ -20,7 +20,7 @@ const Matrix3 XYZ_TO_RGB = {
     { 0.0556434, -0.2040259,  1.0572252}
 };
 
-const Xyz D65_ILLUMINANT = {.x = 0.95047, .y = 1.00000, .z = 1.08883};
+const double D65_ILLUMINANT[3] = {0.95047, 1.00000, 1.08883};
 
 const double LAB_EPSILON = 216.0 / 24389.0;
 const double LAB_KAPPA = 24389.0 / 27.0;
@@ -53,7 +53,7 @@ Rgb rgb_from_hex(const char* hex, bool* ok)
   }
 
   char hex_slice[3] = "00";
-  unsigned long chans[3] = {0, 0, 0};
+  unsigned long chans[3];
 
   for (size_t i = 0; i < 3; i++) {
     memcpy(hex_slice, hex + 2 * i + 1, 2);
@@ -131,13 +131,11 @@ double lab_transfer_inverse(double x)
 
 Lab xyz_to_lab(const Xyz* xyz)
 {
-  double normalized[3] = {xyz->x / D65_ILLUMINANT.x,
-                          xyz->y / D65_ILLUMINANT.y,
-                          xyz->z / D65_ILLUMINANT.z};
+  const double xyz_comps[] = {xyz->x, xyz->y, xyz->z};
 
   double transfer_vals[3];
   for (size_t i = 0; i < 3; i++) {
-    transfer_vals[i] = lab_transfer(normalized[i]);
+    transfer_vals[i] = lab_transfer(xyz_comps[i] / D65_ILLUMINANT[i]);
   }
 
   return (Lab){
@@ -149,17 +147,13 @@ Lab xyz_to_lab(const Xyz* xyz)
 
 Xyz lab_to_xyz(const Lab* lab)
 {
-  double inv_args[3];
-  inv_args[1] = (lab->l + 16.0) / 116.0;
-  inv_args[0] = inv_args[1] + lab->a / 500.0;
-  inv_args[2] = inv_args[1] - lab->b / 200.0;
+  const double tmp = (lab->l + 16.0) / 116.0;
+  const double inv_args[] = {tmp + lab->a / 500.0, tmp, tmp - lab->b / 200.0};
 
-  double inv_vals[3];
+  double xyz_comps[3];
   for (size_t i = 0; i < 3; i++) {
-    inv_vals[i] = lab_transfer_inverse(inv_args[i]);
+    xyz_comps[i] = D65_ILLUMINANT[i] * lab_transfer_inverse(inv_args[i]);
   }
 
-  return (Xyz){.x = D65_ILLUMINANT.x * inv_vals[0],
-               .y = D65_ILLUMINANT.y * inv_vals[1],
-               .z = D65_ILLUMINANT.z * inv_vals[2]};
+  return (Xyz){.x = xyz_comps[0], .y = xyz_comps[1], .z = xyz_comps[2]};
 }
