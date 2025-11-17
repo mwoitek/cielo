@@ -24,7 +24,7 @@ typedef struct {
 } Lab;
 
 Rgb rgb_from_hex(const char* hex, bool* ok);
-void rgb_to_hex(const Rgb* rgb, char out[RGB_HEX_LENGTH + 1]);
+void rgb_to_hex(const Rgb* rgb, char hex[RGB_HEX_LENGTH + 1]);
 
 Xyz rgb_to_xyz(const Rgb* rgb);
 Rgb xyz_to_rgb(const Xyz* xyz);
