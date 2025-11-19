@@ -71,5 +71,27 @@ int main(void)
   printf("Mint: Y = %.6f\n", mint_xyz.y);  // 0.354703
   printf("Mint: Z = %.6f\n", mint_xyz.z);  // 0.293058
 
+  printf("\n");
+
+  ////////////////
+  // lab_to_lch //
+  ////////////////
+  const Lab mulberry_lab = {.l = 51.1435, .a = 48.1475, .b = -15.2829};
+  const Lch mulberry_lch = lab_to_lch(&mulberry_lab);
+  printf("Mulberry: L* = %.4f\n", mulberry_lch.l);       // 51.1435
+  printf("Mulberry: C* = %.4f\n", mulberry_lch.c);       // 50.5148
+  printf("Mulberry: h\u00B0 = %.4f\n", mulberry_lch.h);  // 342.3896
+
+  printf("\n");
+
+  ////////////////
+  // lch_to_lab //
+  ////////////////
+  const Lch foliage_lch = {.l = 43.0797, .c = 24.7296, .h = 124.8435};
+  const Lab foliage_lab = lch_to_lab(&foliage_lch);
+  printf("Foliage: L* = %.4f\n", foliage_lab.l);  // 43.0797
+  printf("Foliage: a* = %.4f\n", foliage_lab.a);  // -14.1289
+  printf("Foliage: b* = %.4f\n", foliage_lab.b);  // 20.2960
+
   return 0;
 }
