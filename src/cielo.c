@@ -23,6 +23,8 @@ static const double LAB_KAPPA = 24389.0 / 27.0;
 
 static const double D65_ILLUMINANT[3] = {0.95047, 1.00000, 1.08883};
 
+static const double PI = 3.14159265358979323846;
+
 /////////////////
 // HEX <-> RGB //
 /////////////////
@@ -172,4 +174,33 @@ Xyz lab_to_xyz(const Lab* lab)
   }
 
   return (Xyz){.x = xyz_vec[0], .y = xyz_vec[1], .z = xyz_vec[2]};
+}
+
+/////////////////
+// LAB <-> LCH //
+/////////////////
+
+static double degrees_to_radians(double degrees)
+{
+  return (PI / 180.0) * degrees;
+}
+
+static double radians_to_degrees(double radians)
+{
+  return (180.0 / PI) * radians;
+}
+
+Lch lab_to_lch(const Lab* lab)
+{
+  return (Lch){.l = lab->l,
+               .c = hypot(lab->a, lab->b),
+               .h = radians_to_degrees(atan2(lab->b, lab->a))};
+}
+
+Lab lch_to_lab(const Lch* lch)
+{
+  const double h_radians = degrees_to_radians(lch->h);
+  return (Lab){.l = lch->l,
+               .a = lch->c * cos(h_radians),
+               .b = lch->c * sin(h_radians)};
 }
