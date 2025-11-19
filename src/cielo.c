@@ -192,9 +192,10 @@ static double radians_to_degrees(double radians)
 
 Lch lab_to_lch(const Lab* lab)
 {
+  const double h_degrees = radians_to_degrees(atan2(lab->b, lab->a));
   return (Lch){.l = lab->l,
                .c = hypot(lab->a, lab->b),
-               .h = radians_to_degrees(atan2(lab->b, lab->a))};
+               .h = h_degrees < 0.0 ? h_degrees + 360.0 : h_degrees};
 }
 
 Lab lch_to_lab(const Lch* lch)
