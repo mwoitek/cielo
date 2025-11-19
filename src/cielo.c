@@ -25,9 +25,9 @@ static const double D65_ILLUMINANT[3] = {0.95047, 1.00000, 1.08883};
 
 static const double PI = 3.14159265358979323846;
 
-/////////////////
-// HEX <-> RGB //
-/////////////////
+//////////////////////
+// Hex code <-> RGB //
+//////////////////////
 
 static bool rgb_validate_hex(const char* hex)
 {
@@ -134,7 +134,7 @@ Rgb xyz_to_rgb(const Xyz* xyz)
 }
 
 /////////////////
-// XYZ <-> LAB //
+// XYZ <-> Lab //
 /////////////////
 
 static double lab_transfer(double x)
@@ -176,9 +176,9 @@ Xyz lab_to_xyz(const Lab* lab)
   return (Xyz){.x = xyz_vec[0], .y = xyz_vec[1], .z = xyz_vec[2]};
 }
 
-/////////////////
-// LAB <-> LCH //
-/////////////////
+///////////////////
+// Lab <-> LCHab //
+///////////////////
 
 static double degrees_to_radians(double degrees)
 {
@@ -190,18 +190,18 @@ static double radians_to_degrees(double radians)
   return (180.0 / PI) * radians;
 }
 
-Lch lab_to_lch(const Lab* lab)
+Lchab lab_to_lchab(const Lab* lab)
 {
   const double h_degrees = radians_to_degrees(atan2(lab->b, lab->a));
-  return (Lch){.l = lab->l,
-               .c = hypot(lab->a, lab->b),
-               .h = h_degrees < 0.0 ? h_degrees + 360.0 : h_degrees};
+  return (Lchab){.l = lab->l,
+                 .c = hypot(lab->a, lab->b),
+                 .h = h_degrees < 0.0 ? h_degrees + 360.0 : h_degrees};
 }
 
-Lab lch_to_lab(const Lch* lch)
+Lab lchab_to_lab(const Lchab* lchab)
 {
-  const double h_radians = degrees_to_radians(lch->h);
-  return (Lab){.l = lch->l,
-               .a = lch->c * cos(h_radians),
-               .b = lch->c * sin(h_radians)};
+  const double h_radians = degrees_to_radians(lchab->h);
+  return (Lab){.l = lchab->l,
+               .a = lchab->c * cos(h_radians),
+               .b = lchab->c * sin(h_radians)};
 }

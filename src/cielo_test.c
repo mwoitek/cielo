@@ -73,22 +73,22 @@ int main(void)
 
   printf("\n");
 
-  ////////////////
-  // lab_to_lch //
-  ////////////////
+  //////////////////
+  // lab_to_lchab //
+  //////////////////
   const Lab mulberry_lab = {.l = 51.1435, .a = 48.1475, .b = -15.2829};
-  const Lch mulberry_lch = lab_to_lch(&mulberry_lab);
-  printf("Mulberry: L* = %.4f\n", mulberry_lch.l);       // 51.1435
-  printf("Mulberry: C* = %.4f\n", mulberry_lch.c);       // 50.5148
-  printf("Mulberry: h\u00B0 = %.4f\n", mulberry_lch.h);  // 342.3896
+  const Lchab mulberry_lchab = lab_to_lchab(&mulberry_lab);
+  printf("Mulberry: L* = %.4f\n", mulberry_lchab.l);       // 51.1435
+  printf("Mulberry: C* = %.4f\n", mulberry_lchab.c);       // 50.5148
+  printf("Mulberry: h\u00B0 = %.4f\n", mulberry_lchab.h);  // 342.3896
 
   printf("\n");
 
-  ////////////////
-  // lch_to_lab //
-  ////////////////
-  const Lch foliage_lch = {.l = 43.0797, .c = 24.7296, .h = 124.8435};
-  const Lab foliage_lab = lch_to_lab(&foliage_lch);
+  //////////////////
+  // lchab_to_lab //
+  //////////////////
+  const Lchab foliage_lchab = {.l = 43.0797, .c = 24.7296, .h = 124.8435};
+  const Lab foliage_lab = lchab_to_lab(&foliage_lchab);
   printf("Foliage: L* = %.4f\n", foliage_lab.l);  // 43.0797
   printf("Foliage: a* = %.4f\n", foliage_lab.a);  // -14.1289
   printf("Foliage: b* = %.4f\n", foliage_lab.b);  // 20.2960
