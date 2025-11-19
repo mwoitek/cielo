@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+///////////////
+// Constants //
+///////////////
+
 static const double RGB_TO_XYZ[3][3] = {
     {0.4124564, 0.3575761, 0.1804375},
     {0.2126729, 0.7151522, 0.0721750},
@@ -17,13 +21,36 @@ static const double XYZ_TO_RGB[3][3] = {
     {-0.9692660,  1.8760108,  0.0415560},
     { 0.0556434, -0.2040259,  1.0572252}
 };
-
 static const double LAB_EPSILON = 216.0 / 24389.0;
 static const double LAB_KAPPA = 24389.0 / 27.0;
-
 static const double D65_ILLUMINANT[3] = {0.95047, 1.00000, 1.08883};
-
 static const double PI = 3.14159265358979323846;
+
+////////////////////////////
+// Mathematical functions //
+////////////////////////////
+
+static void matrix_multiply_vector(const double M[3][3],
+                                   const double v[3],
+                                   double res[3])
+{
+  for (size_t i = 0; i < 3; i++) {
+    res[i] = 0.0;
+    for (size_t j = 0; j < 3; j++) {
+      res[i] += M[i][j] * v[j];
+    }
+  }
+}
+
+static double degrees_to_radians(double degrees)
+{
+  return (PI / 180.0) * degrees;
+}
+
+static double radians_to_degrees(double radians)
+{
+  return (180.0 / PI) * radians;
+}
 
 //////////////////////
 // Hex code <-> RGB //
@@ -80,9 +107,9 @@ void rgb_to_hex(const Rgb* rgb, char hex[RGB_HEX_LENGTH + 1])
 // RGB <-> XYZ //
 /////////////////
 
-static double rgb_gamma_inverse(double x)
+static double rgb_clamp(double x)
 {
-  return x > 0.04045 ? pow((x + 0.055) / 1.055, 2.4) : x / 12.92;
+  return fmax(0.0, fmin(x, 1.0));
 }
 
 static double rgb_gamma(double x)
@@ -90,21 +117,9 @@ static double rgb_gamma(double x)
   return x > 0.0031308 ? 1.055 * pow(x, 1.0 / 2.4) - 0.055 : x * 12.92;
 }
 
-static double rgb_clamp(double x)
+static double rgb_gamma_inverse(double x)
 {
-  return fmax(0.0, fmin(x, 1.0));
-}
-
-static void matrix_multiply_vector(const double M[3][3],
-                                   const double v[3],
-                                   double res[3])
-{
-  for (size_t i = 0; i < 3; i++) {
-    res[i] = 0.0;
-    for (size_t j = 0; j < 3; j++) {
-      res[i] += M[i][j] * v[j];
-    }
-  }
+  return x > 0.04045 ? pow((x + 0.055) / 1.055, 2.4) : x / 12.92;
 }
 
 Xyz rgb_to_xyz(const Rgb* rgb)
@@ -179,16 +194,6 @@ Xyz lab_to_xyz(const Lab* lab)
 ///////////////////
 // Lab <-> LCHab //
 ///////////////////
-
-static double degrees_to_radians(double degrees)
-{
-  return (PI / 180.0) * degrees;
-}
-
-static double radians_to_degrees(double radians)
-{
-  return (180.0 / PI) * radians;
-}
 
 Lchab lab_to_lchab(const Lab* lab)
 {
