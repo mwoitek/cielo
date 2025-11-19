@@ -23,10 +23,9 @@ $(LUA_MOD): $(BUILD_DIR)/*.o
 clean:
 	$(RM) -r $(BUILD_DIR)
 
-# TODO: this is for quick testing, and eventually should be removed
-test: $(BUILD_DIR)/cielo_test
+example: $(BUILD_DIR)/example
 
-$(BUILD_DIR)/cielo_test: $(filter-out %_lua.c, $(wildcard src/*.c)) | $(BUILD_DIR)
+$(BUILD_DIR)/example: $(filter-out %_lua.c, $(wildcard src/*.c)) | $(BUILD_DIR)
 	$(CC) -std=c99 -g -O0 -o $@ $^ $(LDFLAGS) && valgrind -q $@
 
-.PHONY: all clean test
+.PHONY: all clean example
