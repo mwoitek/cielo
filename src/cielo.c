@@ -21,10 +21,12 @@ static const double XYZ_TO_RGB[3][3] = {
     {-0.9692660,  1.8760108,  0.0415560},
     { 0.0556434, -0.2040259,  1.0572252}
 };
-static const double LAB_EPSILON = 216.0 / 24389.0;
-static const double LAB_KAPPA = 24389.0 / 27.0;
+static const double EPSILON = 216.0 / 24389.0;
+static const double KAPPA = 24389.0 / 27.0;
 static const double D65_ILLUMINANT[3] = {0.95047, 1.00000, 1.08883};
 static const double PI = 3.14159265358979323846;
+static const double D65_CHROMATICITY_COORDS[2] = {0.197839824821408,
+                                                  0.468336302932410};
 
 ////////////////////////////
 // Mathematical functions //
@@ -154,12 +156,12 @@ Rgb xyz_to_rgb(const Xyz* xyz)
 
 static double lab_transfer(double x)
 {
-  return x > LAB_EPSILON ? cbrt(x) : (LAB_KAPPA * x + 16.0) / 116.0;
+  return x > EPSILON ? cbrt(x) : (KAPPA * x + 16.0) / 116.0;
 }
 
 static double lab_transfer_inverse(double x)
 {
-  return x > cbrt(LAB_EPSILON) ? x * x * x : (116.0 * x - 16.0) / LAB_KAPPA;
+  return x > cbrt(EPSILON) ? x * x * x : (116.0 * x - 16.0) / KAPPA;
 }
 
 Lab xyz_to_lab(const Xyz* xyz)
@@ -209,4 +211,19 @@ Lab lchab_to_lab(const Lchab* lchab)
   return (Lab){.l = lchab->l,
                .a = lchab->c * cos(h_radians),
                .b = lchab->c * sin(h_radians)};
+}
+
+/////////////////
+// XYZ <-> Luv //
+/////////////////
+
+Luv xyz_to_luv(const Xyz* xyz)
+{
+  const double l =
+      xyz->y > EPSILON ? 116.0 * cbrt(xyz->y) - 16.0 : KAPPA * xyz->y;
+  const double tmp = 13.0 * l;
+  const double den = xyz->x + 15.0 * xyz->y + 3.0 * xyz->z;
+  return (Luv){.l = l,
+               .u = tmp * (4.0 * xyz->x / den - D65_CHROMATICITY_COORDS[0]),
+               .v = tmp * (9.0 * xyz->y / den - D65_CHROMATICITY_COORDS[1])};
 }

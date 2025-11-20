@@ -1,6 +1,6 @@
-#include "cielo.h"
-
 #include <stdio.h>
+
+#include "cielo.h"
 
 int main(void)
 {
@@ -92,6 +92,17 @@ int main(void)
   printf("Foliage: L* = %.4f\n", foliage_lab.l);  // 43.0797
   printf("Foliage: a* = %.4f\n", foliage_lab.a);  // -14.1289
   printf("Foliage: b* = %.4f\n", foliage_lab.b);  // 20.2960
+
+  printf("\n");
+
+  ////////////////
+  // xyz_to_luv //
+  ////////////////
+  const Xyz blue_flower_xyz = {.x = 0.253259, .y = 0.235988, .z = 0.448072};
+  const Luv blue_flower_luv = xyz_to_luv(&blue_flower_xyz);
+  printf("Blue Flower: L* = %.4f\n", blue_flower_luv.l);  // 55.6839
+  printf("Blue Flower: u* = %.4f\n", blue_flower_luv.u);  // -0.4685
+  printf("Blue Flower: v* = %.4f\n", blue_flower_luv.v);  // -39.7489
 
   return 0;
 }

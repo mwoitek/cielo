@@ -29,6 +29,12 @@ typedef struct {
   double h;
 } Lchab;
 
+typedef struct {
+  double l;
+  double u;
+  double v;
+} Luv;
+
 Rgb rgb_from_hex(const char* hex, bool* ok);
 void rgb_to_hex(const Rgb* rgb, char hex[RGB_HEX_LENGTH + 1]);
 
@@ -40,5 +46,8 @@ Xyz lab_to_xyz(const Lab* lab);
 
 Lchab lab_to_lchab(const Lab* lab);
 Lab lchab_to_lab(const Lchab* lchab);
+
+Luv xyz_to_luv(const Xyz* xyz);
+// Xyz luv_to_xyz(const Luv* luv);
 
 #endif
